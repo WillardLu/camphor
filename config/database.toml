@@ -1,0 +1,6 @@
+[postgresql]
+host = "localhost"
+port = "5432"
+database = "shangjiang_hospital"
+user = "starry"
+password = "belighT928s"
