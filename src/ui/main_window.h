@@ -20,6 +20,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
+#include <toml/toml.hpp>
 
 #include "data_management.h"
 #include "main_menu_label.h"

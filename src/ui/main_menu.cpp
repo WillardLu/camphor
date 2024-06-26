@@ -3,10 +3,11 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
+#include "main_menu.h"
 
-#include <gtest/gtest.h>
-int main(int argc, char **argv) {
-  testing::InitGoogleTest(&argc, argv);
-  ::testing::GTEST_FLAG(filter) = "GENERAL_Tests.*";
-  return RUN_ALL_TESTS();
+MainMenu::MainMenu(QWidget *parent) : QWidget(parent) {
+  setAttribute(Qt::WA_DeleteOnClose);
+  setFixedWidth(200);
 }
+
+MainMenu::~MainMenu() {}

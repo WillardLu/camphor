@@ -6,10 +6,16 @@
 #include "main_window.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
+  auto ui_data = toml::parse("config/ui.toml");
+  const auto main_window_size = toml::find(ui_data, "MainWindow");
+  int main_window_width = toml::find<int>(main_window_size, "initial_width");
+  int main_window_height = toml::find<int>(main_window_size, "initial_height");
+  int a1 = toml::find<int>(ui_data, "MainWindow.initial_width");
+  printf("a1: %d\n", a1);
   // 创建中心区
-  this->resize(1200, 800);
+  this->resize(main_window_width, main_window_height);
   this->central_widget_ = new QWidget(this);
-  // this->central_widget_->setAttribute(Qt::WA_DeleteOnClose);
+  this->central_widget_->setAttribute(Qt::WA_DeleteOnClose);
   setCentralWidget(central_widget_);
   this->central_widget_->setStyleSheet(QString("background-color: #E6E6E6;"));
   main_layout_ = new QHBoxLayout(central_widget_);
@@ -23,7 +29,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
   this->logo_ = new QLabel(this->main_menu_);
   // this->logo_->setAttribute(Qt::WA_DeleteOnClose);
   //  判断图像文件是否存在
-  QString logo_file("my_logo.png");
+  QString logo_file("resource/my_logo.png");
   if (QFile::exists(logo_file)) {
     qDebug("Studio logo image file exists.\n");
     QPixmap pixmap(logo_file);
@@ -34,8 +40,6 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
   } else {
     qDebug("Studio logo image file does not exist.\n");
   }
-
-  qDebug("step1...\n");
 
   // 创建主菜单
   /*

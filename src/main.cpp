@@ -12,7 +12,6 @@ int main(int argc, char *argv[]) {
 
   MainWindow *window;
   window = new MainWindow();
-  printf("test...\n");
   window->setWindowTitle("盛语智慧医院");
   window->show();
 

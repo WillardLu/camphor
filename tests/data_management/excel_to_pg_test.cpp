@@ -3,9 +3,9 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
+#include <data_management/excel_to_pg.h>
 #include <gtest/gtest.h>
 
-#include <data_management/excel_to_pg.h>
 #include <toml/toml.hpp>
 
 using std::cout;

@@ -21,6 +21,7 @@ qt_standard_project_setup()
 add_executable(${PROJECT_NAME}
   main.cpp
   ui/data_management.cpp
+  ui/main_menu.cpp
   ui/main_menu_label.cpp
   ui/main_window.cpp
   ui/sub_menu_label.cpp)
