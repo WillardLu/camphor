@@ -2,7 +2,4 @@
 [MainWindow]
 initial_width = 1200
 initial_height = 800
-
-# 主窗口的中间窗口
-[central_widget]
 background-color = "#E6E6E6"

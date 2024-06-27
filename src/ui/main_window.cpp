@@ -6,18 +6,11 @@
 #include "main_window.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
-  auto ui_data = toml::parse("config/ui.toml");
-  const auto main_window_size = toml::find(ui_data, "MainWindow");
-  int main_window_width = toml::find<int>(main_window_size, "initial_width");
-  int main_window_height = toml::find<int>(main_window_size, "initial_height");
-  int a1 = toml::find<int>(ui_data, "MainWindow.initial_width");
-  printf("a1: %d\n", a1);
-  // 创建中心区
-  this->resize(main_window_width, main_window_height);
-  this->central_widget_ = new QWidget(this);
-  this->central_widget_->setAttribute(Qt::WA_DeleteOnClose);
+  central_widget_ = new QWidget(this);
+  central_widget_->setAttribute(Qt::WA_DeleteOnClose);
   setCentralWidget(central_widget_);
-  this->central_widget_->setStyleSheet(QString("background-color: #E6E6E6;"));
+  GetConfig();
+
   main_layout_ = new QHBoxLayout(central_widget_);
 
   // 创建左侧主菜单栏
@@ -153,4 +146,43 @@ void MainWindow::DrawSubMenu(int index) {
       sub_menu_label_[i]->show();
     }
   }
+}
+
+void MainWindow::GetConfig() {
+  std::string file_name = "config/ui.toml";
+  // 使用STL判断文件是否存在
+  if (!std::filesystem::exists(file_name)) {
+    printf("The configuration file does not exist.\n");
+    return;
+  }
+  const auto test = toml::try_parse(file_name);
+  if (test.is_err()) {
+    printf("Configuration file parsing failed.\n");
+    return;
+  }
+  const auto ui_data = toml::parse(file_name);
+  if (!ui_data.contains("MainWindow")) {
+    cerr << "The MainWindow table is missing from the configuration file.\n";
+    return;
+  }
+  const auto main_window_size = toml::find(ui_data, "MainWindow");
+  if (!main_window_size.contains("initial_width")) {
+    cerr << "The initial_width field is missing from the MainWindow table.\n";
+    return;
+  }
+  if (!main_window_size.contains("initial_height")) {
+    cerr << "The initial_height field is missing from the MainWindow table.\n";
+    return;
+  }
+  int main_window_width = main_window_size.at("initial_width").as_integer();
+  int main_window_height = main_window_size.at("initial_height").as_integer();
+  resize(main_window_width, main_window_height);
+  if (!main_window_size.contains("background-color")) {
+    cerr
+        << "The background-color field is missing from the MainWindow table.\n";
+    return;
+  }
+  string bg_color = "background-color: " +
+                    main_window_size.at("background-color").as_string() + ";";
+  central_widget_->setStyleSheet(QString(bg_color.c_str()));
 }

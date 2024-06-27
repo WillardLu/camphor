@@ -26,6 +26,9 @@
 #include "main_menu_label.h"
 #include "sub_menu_label.h"
 
+using std::cerr;
+using std::string;
+
 class MainWindow : public QMainWindow {
   Q_OBJECT
 
@@ -39,6 +42,7 @@ class MainWindow : public QMainWindow {
   void ReceiveFromSubMenu(int index);
 
  private:
+  void GetConfig();
   // 中心控件与主布局
   QWidget *central_widget_;
   QHBoxLayout *main_layout_;
