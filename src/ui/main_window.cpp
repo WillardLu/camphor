@@ -12,74 +12,28 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
   GetConfig();
 
   main_layout_ = new QHBoxLayout(central_widget_);
-
   // 创建左侧主菜单栏
-  main_menu_ = new QWidget(this->central_widget_);
-  main_menu_->setAttribute(Qt::WA_DeleteOnClose);
-  main_menu_->setFixedWidth(200);
-  main_menu_->setStyleSheet(QString("background-color: WHITE;"));
-  // 创建图片标签
-  this->logo_ = new QLabel(this->main_menu_);
-  // this->logo_->setAttribute(Qt::WA_DeleteOnClose);
-  //  判断图像文件是否存在
-  QString logo_file("resource/my_logo.png");
-  if (QFile::exists(logo_file)) {
-    qDebug("Studio logo image file exists.\n");
-    QPixmap pixmap(logo_file);
-    pixmap = pixmap.scaledToWidth(100, Qt::SmoothTransformation);
-    this->logo_->setPixmap(pixmap);
-    this->logo_->move(50, 20);
-    this->logo_->setAlignment(Qt::AlignCenter);
-  } else {
-    qDebug("Studio logo image file does not exist.\n");
-  }
-
-  // 创建主菜单
-  /*
-  const char* menu_title[14] = {
-      "概览",     "物价管理",   "门急诊挂号",     "住院登记", "财务结算",
-      "药库管理", "电子病历",   "影像归档和通信", "实验室",   "临床决策支持",
-      "智能运营", "互联网医院", "系统设置",       "退出"};
-  */
-
-  const char* menu_title[14] = {"财务结算", "系统设置", "退出", "", "", "", "",
-                                "",         "",         "",     "", "", "", ""};
+  main_menu_ = new MainMenu(this->central_widget_);
   for (int i = 0; i < 14; i++) {
-    if (menu_title[i] == nullptr || *menu_title[i] == '\0') break;
-    main_menu_label_[i] = new MainMenuLabel(main_menu_);
-    main_menu_label_[i]->setText(menu_title[i]);
-    main_menu_label_[i]->move(10, 140 + i * 40);
-    main_menu_label_[i]->SetIndex(i);
-    if (strcmp(menu_title[i], "退出") != 0) {
-      connect(main_menu_label_[i], &MainMenuLabel::SendIndex, this,
+    int label_index = main_menu_->menu_item_[i]->GetIndex();
+    // label_index的值为-1时表示未使用，-2时表示是退出标签。
+    if (label_index == -1) break;
+    if (label_index >= 0) {
+      connect(main_menu_->menu_item_[i], &MainMenuLabel::SendIndex, this,
               &MainWindow::ReceiveFromMainMenu);
     } else {
-      connect(main_menu_label_[i], &MainMenuLabel::SendIndex, this,
+      connect(main_menu_->menu_item_[i], &MainMenuLabel::SendIndex, this,
               &MainWindow::close);
+      break;
     }
   }
 
-  // 创建顶部子菜单栏
-  sub_menu_ = new QWidget(central_widget_);
-  sub_menu_->setAttribute(Qt::WA_DeleteOnClose);
-  sub_menu_->setFixedHeight(50);
-  sub_menu_->setStyleSheet("background-color: #FFFFFF;");
+  // 创建顶部子菜单栏并建立信号连接
+  sub_menu_ = new SubMenu(central_widget_);
   for (int i = 0; i < 10; i++) {
-    sub_menu_label_[i] = new SubMenuLabel(sub_menu_);
-    sub_menu_label_[i]->setText("");
-    sub_menu_label_[i]->move(50 + i * 100, 20);
-    sub_menu_label_[i]->SetIndex(i);
-    sub_menu_label_[i]->hide();
-    connect(sub_menu_label_[i], &SubMenuLabel::SendIndex, this,
+    connect(sub_menu_->menu_item_[i], &SubMenuLabel::SendIndex, this,
             &MainWindow::ReceiveFromSubMenu);
   }
-
-  // 创建工作区
-  // workspace_ = new QWidget(central_widget_);
-  // workspace_->setAttribute(Qt::WA_DeleteOnClose);
-  // workspace_->setStyleSheet("background-color: #FFF0FF;");
-
-  // 各个功能窗口
 
   left_layout_ = new QVBoxLayout();
   right_layout_ = new QVBoxLayout();
@@ -99,11 +53,11 @@ MainWindow::~MainWindow() { this->deleteLater(); }
 /// @param index 主菜单标签索引
 void MainWindow::ReceiveFromMainMenu(int index) {
   if (index == active_main_menu_) return;
-  main_menu_label_[active_main_menu_]->setStyleSheet("color: BLACK; ");
-  main_menu_label_[index]->setStyleSheet(" color: #C00000; ");
+  main_menu_->menu_item_[active_main_menu_]->setStyleSheet("color: BLACK; ");
+  main_menu_->menu_item_[index]->setStyleSheet(" color: #C00000; ");
   active_main_menu_ = index;
   if (active_sub_menu_ >= 0) {
-    sub_menu_label_[active_sub_menu_]->setStyleSheet("color: BLACK; ");
+    sub_menu_->menu_item_[active_sub_menu_]->setStyleSheet("color: BLACK; ");
   }
   DrawSubMenu(index);
   repaint();
@@ -113,9 +67,9 @@ void MainWindow::ReceiveFromMainMenu(int index) {
 /// @param index 子菜单标签索引
 void MainWindow::ReceiveFromSubMenu(int index) {
   if (active_sub_menu_ >= 0) {
-    sub_menu_label_[active_sub_menu_]->setStyleSheet("color: BLACK; ");
+    sub_menu_->menu_item_[active_sub_menu_]->setStyleSheet("color: BLACK; ");
   }
-  sub_menu_label_[index]->setStyleSheet(" color: BLUE; ");
+  sub_menu_->menu_item_[index]->setStyleSheet(" color: BLUE; ");
   active_sub_menu_ = index;
   repaint();
 }
@@ -139,50 +93,46 @@ void MainWindow::DrawSubMenu(int index) {
       {"", "", "", "", "", "", "", "", "", ""},
       {"", "", "", "", "", "", "", "", "", ""}};
   for (int i = 0; i < 10; i++) {
-    sub_menu_label_[i]->setText(menu_title[index][i]);
+    sub_menu_->menu_item_[i]->setText(menu_title[index][i]);
     if (menu_title[index][i] == nullptr || *menu_title[index][i] == '\0') {
-      sub_menu_label_[i]->hide();
+      sub_menu_->menu_item_[i]->hide();
     } else {
-      sub_menu_label_[i]->show();
+      sub_menu_->menu_item_[i]->show();
     }
   }
 }
 
 void MainWindow::GetConfig() {
-  std::string file_name = "config/ui.toml";
-  // 使用STL判断文件是否存在
-  if (!std::filesystem::exists(file_name)) {
-    printf("The configuration file does not exist.\n");
-    return;
+  std::unordered_map<string, string> config;
+  string err = ReadSTOML("config/ui.toml", config);
+  QString message = "";
+  int main_window_width = 600;
+  int main_window_height = 480;
+  string bg_color = "background-color: black;";
+  if (!err.empty()) {
+    message = err.c_str();
+  } else {
+    if (config.find("MainWindow.width") == config.end()) {
+      message = "Can't find MainWindow.width in the configuration!";
+    } else {
+      main_window_width = stoi(config["MainWindow.width"]);
+    }
+
+    if (config.find("MainWindow.height") == config.end()) {
+      message = "Can't find MainWindow.height in the configuration!";
+    } else {
+      main_window_height = stoi(config["MainWindow.height"]);
+    }
+
+    if (config.find("MainWindow.bg-color") == config.end()) {
+      message = "Can't find MainWindow.bg-color in the configuration!";
+    } else {
+      bg_color = "background-color: " + config["MainWindow.bg-color"] + ";";
+    }
   }
-  const auto test = toml::try_parse(file_name);
-  if (test.is_err()) {
-    printf("Configuration file parsing failed.\n");
-    return;
+  if (message != "") {
+    QMessageBox::warning(this, "Warning", message);
   }
-  const auto ui_data = toml::parse(file_name);
-  if (!ui_data.contains("MainWindow")) {
-    cerr << "The MainWindow table is missing from the configuration file.\n";
-    return;
-  }
-  const auto main_window_size = toml::find(ui_data, "MainWindow");
-  if (!main_window_size.contains("initial_width")) {
-    cerr << "The initial_width field is missing from the MainWindow table.\n";
-    return;
-  }
-  if (!main_window_size.contains("initial_height")) {
-    cerr << "The initial_height field is missing from the MainWindow table.\n";
-    return;
-  }
-  int main_window_width = main_window_size.at("initial_width").as_integer();
-  int main_window_height = main_window_size.at("initial_height").as_integer();
   resize(main_window_width, main_window_height);
-  if (!main_window_size.contains("background-color")) {
-    cerr
-        << "The background-color field is missing from the MainWindow table.\n";
-    return;
-  }
-  string bg_color = "background-color: " +
-                    main_window_size.at("background-color").as_string() + ";";
   central_widget_->setStyleSheet(QString(bg_color.c_str()));
 }

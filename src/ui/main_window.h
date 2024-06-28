@@ -6,11 +6,11 @@
 #ifndef QT_MAINWINDOW_SRC_UI_MAIN_WINDOW_
 #define QT_MAINWINDOW_SRC_UI_MAIN_WINDOW_
 
+#include <mountain_town/string/toml.h>
+
 #include <QApplication>
 #include <QDebug>
-#include <QFile>
 #include <QHBoxLayout>
-#include <QLabel>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QPixmap>
@@ -20,13 +20,15 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
-#include <toml/toml.hpp>
 
 #include "data_management.h"
-#include "main_menu_label.h"
+#include "main_menu.h"
+#include "sub_menu.h"
 #include "sub_menu_label.h"
 
 using std::cerr;
+using std::cout;
+using std::endl;
 using std::string;
 
 class MainWindow : public QMainWindow {
@@ -45,19 +47,15 @@ class MainWindow : public QMainWindow {
   void GetConfig();
   // 中心控件与主布局
   QWidget *central_widget_;
-  QHBoxLayout *main_layout_;
   // 主菜单
-  QWidget *main_menu_;
-  QLabel *logo_;
-  MainMenuLabel *main_menu_label_[14];
+  MainMenu *main_menu_;
   // 子菜单
-  QWidget *sub_menu_;
-  SubMenuLabel *sub_menu_label_[10];
-  // 左右布局
+  SubMenu *sub_menu_;
+  // 布局
+  QHBoxLayout *main_layout_;
   QVBoxLayout *left_layout_;
   QVBoxLayout *right_layout_;
-  // 工作区
-  QWidget *workspace_;
+  // 数据管理
   DataManagement *data_management_;
   // 活动菜单项索引
   int active_main_menu_ = -1;

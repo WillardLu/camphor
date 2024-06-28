@@ -1,5 +1,13 @@
 # 主窗口
 [MainWindow]
-initial_width = 1200
-initial_height = 800
-background-color = "#E6E6E6"
+width = 1200
+height = 800
+bg-color = "#E6E6E6"
+
+[MainMenu]
+width = 200
+bg-color = "white"
+
+[SubMenu]
+height = 50
+bg-color = "white"

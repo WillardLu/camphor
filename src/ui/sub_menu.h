@@ -3,8 +3,8 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
-#ifndef QT_MAINWINDOW_SRC_UI_MAIN_MENU_
-#define QT_MAINWINDOW_SRC_UI_MAIN_MENU_
+#ifndef QT_MAINWINDOW_SRC_UI_SUB_MENU_
+#define QT_MAINWINDOW_SRC_UI_SUB_MENU_
 
 #include <mountain_town/string/toml.h>
 
@@ -14,23 +14,22 @@
 #include <QPainter>
 #include <QWidget>
 
-#include "main_menu_label.h"
+#include "sub_menu_label.h"
 
-class MainMenu : public QWidget {
+class SubMenu : public QWidget {
   Q_OBJECT
 
  public:
-  explicit MainMenu(QWidget *parent = nullptr);
-  ~MainMenu();
+  explicit SubMenu(QWidget *parent = nullptr);
+  ~SubMenu();
 
  protected:
   void paintEvent(QPaintEvent *event) override;
 
  private:
-  QLabel *logo_;
-  MainMenuLabel *menu_item_[14];
+  SubMenuLabel *menu_item_[10];
 
   friend class MainWindow;
 };
 
-#endif  // QT_MAINWINDOW_SRC_UI_MAIN_MENU_
+#endif  // QT_MAINWINDOW_SRC_UI_SUB_MENU_

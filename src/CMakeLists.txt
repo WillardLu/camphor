@@ -24,7 +24,10 @@ add_executable(${PROJECT_NAME}
   ui/main_menu.cpp
   ui/main_menu_label.cpp
   ui/main_window.cpp
-  ui/sub_menu_label.cpp)
+  ui/sub_menu.cpp
+  ui/sub_menu_label.cpp
+  ${CMAKE_SOURCE_DIR}/lib/mountain_town/string/basic.cpp
+  ${CMAKE_SOURCE_DIR}/lib/mountain_town/string/toml.cpp)
 
 target_include_directories(${PROJECT_NAME}
  PUBLIC

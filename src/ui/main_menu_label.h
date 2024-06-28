@@ -17,6 +17,7 @@ class MainMenuLabel : public QLabel {
   MainMenuLabel(QWidget *parent = nullptr);
   ~MainMenuLabel();
   void SetIndex(int index) { this->index_ = index; };
+  int GetIndex() { return index_; };
 
  signals:
   void SendIndex(int index);
@@ -25,7 +26,7 @@ class MainMenuLabel : public QLabel {
   void mouseReleaseEvent(QMouseEvent *event) override;
 
  private:
-  int index_ = 0;
+  int index_ = -1;
 };
 
 #endif  // QT_MAINWINDOW_SRC_UI_MAIN_MENU_LABEL_
