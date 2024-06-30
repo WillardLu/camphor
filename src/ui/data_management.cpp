@@ -11,18 +11,16 @@ DataManagement::DataManagement(QWidget* parent) : QWidget(parent) {
   // 背景色需要setStyleSheet和paintEvent一起配合才能完整实现
   this->setStyleSheet("background-color: white;");
 
-  data_date_ = new QLabel(this);
-  data_date_->setText("数据日期：");
-  data_date_->move(20, 20);
-  item1_ = new QLabel(this);
-  item1_->setText("检治项目：");
-  item1_->move(20, 50);
-  item2_ = new QLabel(this);
-  item2_->setText("门诊：");
-  item2_->move(20, 80);
-  item3_ = new QLabel(this);
-  item3_->setText("住院：");
-  item3_->move(20, 110);
+  QString item_title[4] = {"数据日期：", "检治项目：", "门诊：", "住院："};
+  int item_x[4] = {20, 20, 20, 20};
+  int item_y[4] = {20, 60, 90, 120};
+  for (int i = 0; i < 4; i++) {
+    items_[i] = new WorkLabel(this);
+    items_[i]->setText(item_title[i]);
+    items_[i]->setFixedSize(80, 20);
+    items_[i]->setAlignment(Qt::AlignRight);
+    items_[i]->move(item_x[i], item_y[i]);
+  }
 }
 
 DataManagement::~DataManagement() {}

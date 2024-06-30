@@ -10,6 +10,8 @@
 #include <QPainter>
 #include <QWidget>
 
+#include "work_label.h"
+
 class DataManagement : public QWidget {
   Q_OBJECT
 
@@ -21,10 +23,7 @@ class DataManagement : public QWidget {
   void paintEvent(QPaintEvent *event) override;
 
  private:
-  QLabel *data_date_;
-  QLabel *item1_;
-  QLabel *item2_;
-  QLabel *item3_;
+  WorkLabel *items_[4];
 };
 
 #endif  // QT_MAINWINDOW_SRC_UI_DATA_MANAGEMENT_

@@ -26,6 +26,7 @@ add_executable(${PROJECT_NAME}
   ui/main_window.cpp
   ui/sub_menu.cpp
   ui/sub_menu_label.cpp
+  ui/work_label.cpp
   ${CMAKE_SOURCE_DIR}/lib/mountain_town/string/basic.cpp
   ${CMAKE_SOURCE_DIR}/lib/mountain_town/string/toml.cpp)
 
