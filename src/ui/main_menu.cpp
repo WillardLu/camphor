@@ -7,15 +7,16 @@
 
 MainMenu::MainMenu(QWidget* parent) : QWidget(parent) {
   setAttribute(Qt::WA_DeleteOnClose);
+  GetConfig();
   logo_ = new QLabel(this);
   logo_->setAttribute(Qt::WA_DeleteOnClose);
   //  判断图像文件是否存在
   QString logo_file("resource/my_logo.png");
   if (QFile::exists(logo_file)) {
     QPixmap pixmap(logo_file);
-    pixmap = pixmap.scaledToWidth(100, Qt::SmoothTransformation);
+    pixmap = pixmap.scaledToWidth(logo_width_, Qt::SmoothTransformation);
     logo_->setPixmap(pixmap);
-    logo_->move(50, 20);
+    logo_->move(logo_x_, logo_y_);
     logo_->setAlignment(Qt::AlignCenter);
   } else {
     QMessageBox::warning(this, "Warning",
@@ -38,7 +39,8 @@ MainMenu::MainMenu(QWidget* parent) : QWidget(parent) {
     if (strcmp(menu_title[i], "-1") == 0) break;
     menu_item_[i] = new MainMenuLabel(this);
     menu_item_[i]->setText(menu_title[i]);
-    menu_item_[i]->move(10, 140 + i * 40);
+    menu_item_[i]->move(item_left_margin_,
+                        item_top_margin_ + i * item_row_spacing_);
     if (strcmp(menu_title[i], "退出") == 0) {
       menu_item_[i]->SetIndex(-2);
     } else {
@@ -52,32 +54,82 @@ MainMenu::~MainMenu() {}
 void MainMenu::paintEvent(QPaintEvent* event) {
   Q_UNUSED(event)
 
+  QPainter painter(this);
+  painter.setBrush(QColor(bg_color_));
+  painter.drawRect(0, 0, width(), height());
+}
+
+void MainMenu::GetConfig() {
   std::unordered_map<string, string> config;
   string err = ReadSTOML("config/ui.toml", config);
-  QString message = "";
+  string message = "";
   int main_menu_width = 200;
   string bg_color = "white";
+  int logo_width = 100;
+  int logo_x = 50;
+  int logo_y = 20;
+  int item_left_margin = 10;
+  int item_top_margin = 140;
+  int item_row_spacing = 40;
+  string table_name = "MainMenu";
   if (!err.empty()) {
     message = err.c_str();
   } else {
-    if (config.find("MainMenu.width") == config.end()) {
-      message = "Can't find MainMenu.width in the configuration!";
+    if (config.find(table_name + ".width") == config.end()) {
+      message = "Can't find " + table_name + ".width in the configuration!";
     } else {
-      main_menu_width = stoi(config["MainMenu.width"]);
+      main_menu_width = stoi(config[table_name + ".width"]);
     }
-    if (config.find("MainMenu.bg-color") == config.end()) {
-      message = "Can't find MainMenu.bg-color in the configuration!";
+    if (config.find(table_name + ".bg_color") == config.end()) {
+      message = "Can't find " + table_name + ".bg_color in the configuration!";
     } else {
-      bg_color = config["MainMenu.bg-color"];
+      bg_color = config[table_name + ".bg_color"];
+    }
+    if (config.find(table_name + ".item_left_margin") == config.end()) {
+      message = "Can't find " + table_name +
+                ".item_left_margin in the configuration!";
+    } else {
+      item_left_margin = stoi(config[table_name + ".item_left_margin"]);
+    }
+    if (config.find(table_name + ".item_top_margin") == config.end()) {
+      message =
+          "Can't find " + table_name + ".item_top_margin in the configuration!";
+    } else {
+      item_top_margin = stoi(config[table_name + ".item_top_margin"]);
+    }
+    if (config.find(table_name + ".item_row_spacing") == config.end()) {
+      message = "Can't find " + table_name +
+                ".item_row_spacing in the configuration!";
+    } else {
+      item_row_spacing = stoi(config[table_name + ".item_row_spacing"]);
+    }
+    if (config.find(table_name + ".logo_width") == config.end()) {
+      message =
+          "Can't find " + table_name + ".logo_width in the configuration!";
+    } else {
+      logo_width = stoi(config[table_name + ".logo_width"]);
+    }
+    if (config.find(table_name + ".logo_x") == config.end()) {
+      message = "Can't find " + table_name + ".logo_x in the configuration!";
+    } else {
+      logo_x = stoi(config[table_name + ".logo_x"]);
+    }
+    if (config.find(table_name + ".logo_y") == config.end()) {
+      message = "Can't find " + table_name + ".logo_y in the configuration!";
+    } else {
+      logo_y = stoi(config[table_name + ".logo_y"]);
     }
   }
   if (message != "") {
-    QMessageBox::warning(this, "Warning", message);
+    QMessageBox::warning(this, "Warning", message.c_str());
   }
   setFixedWidth(main_menu_width);
-  string color1 = "background-color: " + bg_color + ";";
-  setStyleSheet(color1.c_str());
-  QPainter painter(this);
-  painter.setBrush(QColor(bg_color.c_str()));
-  painter.drawRect(0, 0, width(), height());
+  bg_color_ = bg_color.c_str();
+  setStyleSheet(("background-color: " + bg_color + ";").c_str());
+  logo_width_ = logo_width;
+  logo_x_ = logo_x;
+  logo_y_ = logo_y;
+  item_left_margin_ = item_left_margin;
+  item_top_margin_ = item_top_margin;
+  item_row_spacing_ = item_row_spacing;
 }

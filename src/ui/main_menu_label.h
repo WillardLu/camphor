@@ -6,9 +6,15 @@
 #ifndef QT_MAINWINDOW_SRC_UI_MAIN_MENU_LABEL_
 #define QT_MAINWINDOW_SRC_UI_MAIN_MENU_LABEL_
 
+#include <mountain_town/string/toml.h>
+
 #include <QLabel>
+#include <QMessageBox>
 #include <QMouseEvent>
 #include <QPalette>
+#include <string>
+
+using std::string;
 
 class MainMenuLabel : public QLabel {
   Q_OBJECT
@@ -18,6 +24,7 @@ class MainMenuLabel : public QLabel {
   ~MainMenuLabel();
   void SetIndex(int index) { this->index_ = index; };
   int GetIndex() { return index_; };
+  void SetColor(int state);
 
  signals:
   void SendIndex(int index);
@@ -26,7 +33,10 @@ class MainMenuLabel : public QLabel {
   void mouseReleaseEvent(QMouseEvent *event) override;
 
  private:
+  void GetConfig();
   int index_ = -1;
+  QString common_color_ = "black";
+  QString selected_color_ = "#C00000";
 };
 
 #endif  // QT_MAINWINDOW_SRC_UI_MAIN_MENU_LABEL_

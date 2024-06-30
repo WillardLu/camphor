@@ -27,7 +27,13 @@ class SubMenu : public QWidget {
   void paintEvent(QPaintEvent *event) override;
 
  private:
+  void GetConfig();
   SubMenuLabel *menu_item_[10];
+
+  QString bg_color_;
+  int item_left_margin_;
+  int item_top_margin_;
+  int item_column_spacing_;
 
   friend class MainWindow;
 };

@@ -6,9 +6,15 @@
 #ifndef CAMPHOR_SRC_UI_LABELS_H
 #define CAMPHOR_SRC_UI_LABELS_H
 
+#include <mountain_town/string/toml.h>
+
 #include <QLabel>
+#include <QMessageBox>
 #include <QMouseEvent>
 #include <QPalette>
+#include <string>
+
+using std::string;
 
 class SubMenuLabel : public QLabel {
   Q_OBJECT
@@ -25,6 +31,7 @@ class SubMenuLabel : public QLabel {
   void mouseReleaseEvent(QMouseEvent *event) override;
 
  private:
+  void GetConfig();
   int index_ = 0;
 };
 

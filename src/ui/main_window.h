@@ -6,20 +6,15 @@
 #ifndef QT_MAINWINDOW_SRC_UI_MAIN_WINDOW_
 #define QT_MAINWINDOW_SRC_UI_MAIN_WINDOW_
 
-#include <mountain_town/string/toml.h>
-
 #include <QApplication>
 #include <QDebug>
 #include <QHBoxLayout>
 #include <QMainWindow>
-#include <QMessageBox>
 #include <QPixmap>
-#include <QString>
 #include <QVBoxLayout>
 #include <QWidget>
 #include <filesystem>
 #include <iostream>
-#include <string>
 
 #include "data_management.h"
 #include "main_menu.h"

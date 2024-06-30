@@ -37,7 +37,6 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
   left_layout_ = new QVBoxLayout();
   right_layout_ = new QVBoxLayout();
-
   left_layout_->addWidget(main_menu_);
   right_layout_->addWidget(sub_menu_);
   data_management_ = new DataManagement(central_widget_);
@@ -53,8 +52,10 @@ MainWindow::~MainWindow() { this->deleteLater(); }
 /// @param index 主菜单标签索引
 void MainWindow::ReceiveFromMainMenu(int index) {
   if (index == active_main_menu_) return;
-  main_menu_->menu_item_[active_main_menu_]->setStyleSheet("color: BLACK; ");
-  main_menu_->menu_item_[index]->setStyleSheet(" color: #C00000; ");
+  if (active_main_menu_ >= 0) {
+    main_menu_->menu_item_[active_main_menu_]->SetColor(0);
+  }
+  main_menu_->menu_item_[index]->SetColor(1);
   active_main_menu_ = index;
   if (active_sub_menu_ >= 0) {
     sub_menu_->menu_item_[active_sub_menu_]->setStyleSheet("color: BLACK; ");
@@ -105,33 +106,34 @@ void MainWindow::DrawSubMenu(int index) {
 void MainWindow::GetConfig() {
   std::unordered_map<string, string> config;
   string err = ReadSTOML("config/ui.toml", config);
-  QString message = "";
+  string message = "";
   int main_window_width = 600;
   int main_window_height = 480;
   string bg_color = "background-color: black;";
+  string table_name = "MainWindow";
   if (!err.empty()) {
     message = err.c_str();
   } else {
-    if (config.find("MainWindow.width") == config.end()) {
-      message = "Can't find MainWindow.width in the configuration!";
+    if (config.find(table_name + ".width") == config.end()) {
+      message = "Can't find " + table_name + ".width in the configuration!";
     } else {
-      main_window_width = stoi(config["MainWindow.width"]);
+      main_window_width = stoi(config[table_name + ".width"]);
     }
 
-    if (config.find("MainWindow.height") == config.end()) {
-      message = "Can't find MainWindow.height in the configuration!";
+    if (config.find(table_name + ".height") == config.end()) {
+      message = "Can't find " + table_name + ".height in the configuration!";
     } else {
-      main_window_height = stoi(config["MainWindow.height"]);
+      main_window_height = stoi(config[table_name + ".height"]);
     }
 
-    if (config.find("MainWindow.bg-color") == config.end()) {
-      message = "Can't find MainWindow.bg-color in the configuration!";
+    if (config.find(table_name + ".bg_color") == config.end()) {
+      message = "Can't find " + table_name + ".bg_color in the configuration!";
     } else {
-      bg_color = "background-color: " + config["MainWindow.bg-color"] + ";";
+      bg_color = "background-color: " + config[table_name + ".bg_color"] + ";";
     }
   }
   if (message != "") {
-    QMessageBox::warning(this, "Warning", message);
+    QMessageBox::warning(this, "Warning", message.c_str());
   }
   resize(main_window_width, main_window_height);
   central_widget_->setStyleSheet(QString(bg_color.c_str()));

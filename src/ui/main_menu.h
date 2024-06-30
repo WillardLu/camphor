@@ -6,12 +6,9 @@
 #ifndef QT_MAINWINDOW_SRC_UI_MAIN_MENU_
 #define QT_MAINWINDOW_SRC_UI_MAIN_MENU_
 
-#include <mountain_town/string/toml.h>
-
 #include <QFile>
-#include <QLabel>
-#include <QMessageBox>
 #include <QPainter>
+#include <QString>
 #include <QWidget>
 
 #include "main_menu_label.h"
@@ -27,8 +24,17 @@ class MainMenu : public QWidget {
   void paintEvent(QPaintEvent *event) override;
 
  private:
+  void GetConfig();
   QLabel *logo_;
   MainMenuLabel *menu_item_[14];
+
+  QString bg_color_;
+  int logo_width_;
+  int logo_x_;
+  int logo_y_;
+  int item_left_margin_;
+  int item_top_margin_;
+  int item_row_spacing_;
 
   friend class MainWindow;
 };

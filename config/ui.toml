@@ -2,12 +2,35 @@
 [MainWindow]
 width = 1200
 height = 800
-bg-color = "#E6E6E6"
+bg_color = "#E6E6E6"
 
 [MainMenu]
 width = 200
-bg-color = "white"
+bg_color = "white"
+logo_width = 100
+logo_x = 50
+logo_y = 20
+item_left_margin = 10
+item_top_margin = 140
+item_row_spacing = 40
+
+[MainMenuLabel]
+width = 180
+height = 20
+color = "black"
+font_name = "Microsoft YaHei"
+font_size = 12
 
 [SubMenu]
 height = 50
-bg-color = "white"
+bg_color = "white"
+item_left_margin = 30
+item_top_margin = 20
+item_column_spacing = 80
+
+[SubMenuLabel]
+width = 80
+height = 20
+color = "black"
+font_name = "Microsoft YaHei"
+font_size = 11
