@@ -6,8 +6,15 @@
 #ifndef QT_MAINWINDOW_SRC_UI_DATA_MANAGEMENT_
 #define QT_MAINWINDOW_SRC_UI_DATA_MANAGEMENT_
 
+#include <QComboBox>
+#include <QDate>
+#include <QFileDialog>
+#include <QHeaderView>
 #include <QLabel>
+#include <QLineEdit>
+#include <QListWidget>
 #include <QPainter>
+#include <QPushButton>
 #include <QWidget>
 
 #include "work_label.h"
@@ -22,8 +29,15 @@ class DataManagement : public QWidget {
  protected:
   void paintEvent(QPaintEvent *event) override;
 
+ private slots:
+  void OpenFolder();
+
  private:
-  WorkLabel *items_[4];
+  QLabel *items_[7];
+  QComboBox *combo_box_[2];
+  QLineEdit *line_edit_[3];
+  QPushButton *buttons_[6];
+  QListWidget *data_list_;
 };
 
 #endif  // QT_MAINWINDOW_SRC_UI_DATA_MANAGEMENT_

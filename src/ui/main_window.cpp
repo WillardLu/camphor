@@ -70,7 +70,7 @@ void MainWindow::ReceiveFromSubMenu(int index) {
   if (active_sub_menu_ >= 0) {
     sub_menu_->menu_item_[active_sub_menu_]->setStyleSheet("color: BLACK; ");
   }
-  sub_menu_->menu_item_[index]->setStyleSheet(" color: BLUE; ");
+  sub_menu_->menu_item_[index]->setStyleSheet("color: #67AB9F; ");
   active_sub_menu_ = index;
   repaint();
 }
