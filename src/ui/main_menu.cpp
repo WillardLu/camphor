@@ -31,13 +31,14 @@ MainMenu::MainMenu(QWidget* parent) : QWidget(parent) {
       "智能运营", "互联网医院", "系统设置",       "退出"};
   */
 
-  const char* menu_title[14] = {"财务结算", "系统设置", "退出", "-1", "-1",
-                                "-1",       "-1",       "-1",   "-1", "-1",
-                                "-1",       "-1",       "-1",   "-1"};
+  const char* menu_title[14] = {"财务结算", "系统设置", "退出", "", "", "", "",
+                                "",         "",         "",     "", "", "", ""};
   for (int i = 0; i < 14; i++) {
-    if (menu_title[i] == nullptr || *menu_title[i] == '\0') break;
-    if (strcmp(menu_title[i], "-1") == 0) break;
     menu_item_[i] = new MainMenuLabel(this);
+    if (strcmp(menu_title[i], "") == 0) {
+      menu_item_[i]->setVisible(false);
+      continue;
+    };
     menu_item_[i]->setText(menu_title[i]);
     menu_item_[i]->move(item_left_margin_,
                         item_top_margin_ + i * item_row_spacing_);

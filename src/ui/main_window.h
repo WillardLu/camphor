@@ -35,16 +35,13 @@ class MainWindow : public QMainWindow {
   void DrawSubMenu(int index);
 
  public slots:
-  void ReceiveFromMainMenu(int index);
-  void ReceiveFromSubMenu(int index);
+  void ReceiveFromMainMenu();
+  void ReceiveFromSubMenu();
 
  private:
   void GetConfig();
-  // 中心控件与主布局
   QWidget *central_widget_;
-  // 主菜单
   MainMenu *main_menu_;
-  // 子菜单
   SubMenu *sub_menu_;
   // 布局
   QHBoxLayout *main_layout_;
@@ -52,9 +49,6 @@ class MainWindow : public QMainWindow {
   QVBoxLayout *right_layout_;
   // 数据管理
   DataManagement *data_management_;
-  // 活动菜单项索引
-  int active_main_menu_ = -1;
-  int active_sub_menu_ = -1;
 };
 
 #endif  // QT_MAINWINDOW_SRC_UI_MAIN_WINDOW_

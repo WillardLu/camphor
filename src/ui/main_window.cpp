@@ -15,16 +15,18 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
   // 创建左侧主菜单栏
   main_menu_ = new MainMenu(this->central_widget_);
   for (int i = 0; i < 14; i++) {
-    int label_index = main_menu_->menu_item_[i]->GetIndex();
-    // label_index的值为-1时表示未使用，-2时表示是退出标签。
-    if (label_index == -1) break;
-    if (label_index >= 0) {
-      connect(main_menu_->menu_item_[i], &MainMenuLabel::SendIndex, this,
-              &MainWindow::ReceiveFromMainMenu);
-    } else {
-      connect(main_menu_->menu_item_[i], &MainMenuLabel::SendIndex, this,
-              &MainWindow::close);
-      break;
+    int item_index = main_menu_->menu_item_[i]->GetIndex();
+    switch (item_index) {
+      case -1:  // 未使用的菜单项
+        break;
+      case -2:  // 退出菜单项
+        connect(main_menu_->menu_item_[i], &MainMenuLabel::SendIndex, this,
+                &MainWindow::close);
+        break;
+      default:
+        connect(main_menu_->menu_item_[i], &MainMenuLabel::SendIndex, this,
+                &MainWindow::ReceiveFromMainMenu);
+        break;
     }
   }
 
@@ -49,29 +51,33 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 MainWindow::~MainWindow() { this->deleteLater(); }
 
 /// @brief 接收来自主菜单标签的信号
-/// @param index 主菜单标签索引
-void MainWindow::ReceiveFromMainMenu(int index) {
-  if (index == active_main_menu_) return;
-  if (active_main_menu_ >= 0) {
-    main_menu_->menu_item_[active_main_menu_]->SetColor(0);
+void MainWindow::ReceiveFromMainMenu() {
+  QObject* senderObj = sender();
+  for (int i = 0; i < 14; ++i) {
+    int label_index = main_menu_->menu_item_[i]->GetIndex();
+    if (label_index < 0) break;
+    if (senderObj != main_menu_->menu_item_[i]) {
+      main_menu_->menu_item_[i]->SetColor(0);
+    } else {
+      main_menu_->menu_item_[i]->SetColor(1);
+      sub_menu_->menu_item_[i]->setStyleSheet("color: BLACK; ");
+      DrawSubMenu(i);
+    }
   }
-  main_menu_->menu_item_[index]->SetColor(1);
-  active_main_menu_ = index;
-  if (active_sub_menu_ >= 0) {
-    sub_menu_->menu_item_[active_sub_menu_]->setStyleSheet("color: BLACK; ");
-  }
-  DrawSubMenu(index);
   repaint();
 }
 
 /// @brief 接收来自子菜单标签的信号
-/// @param index 子菜单标签索引
-void MainWindow::ReceiveFromSubMenu(int index) {
-  if (active_sub_menu_ >= 0) {
-    sub_menu_->menu_item_[active_sub_menu_]->setStyleSheet("color: BLACK; ");
+void MainWindow::ReceiveFromSubMenu() {
+  QObject* senderObj = sender();
+  QString color0 = "color: BLACK; ";
+  for (int i = 0; i < 10; ++i) {
+    if (senderObj != sub_menu_->menu_item_[i]) {
+      sub_menu_->menu_item_[i]->setStyleSheet("color: BLACK; ");
+    } else {
+      sub_menu_->menu_item_[i]->setStyleSheet("color: #67AB9F; ");
+    }
   }
-  sub_menu_->menu_item_[index]->setStyleSheet("color: #67AB9F; ");
-  active_sub_menu_ = index;
   repaint();
 }
 
